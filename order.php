@@ -18,8 +18,17 @@ if (isset($_SESSION["user_name"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <style>
-        table,tr,td,th{
+        .drink_div{
             border: solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .order_form{
+            text-align:center;
+        }
+        .drink_image {
+            width: 90%;
         }
     </style>
 </head>
@@ -108,7 +117,7 @@ if (isset($_SESSION["user_name"])) {
         get_drink_info();
 
         function get_ingredient_drinks(ingredient) {
-            const apiUrl = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=" + ingredient;
+            const apiUrl = "https://www.thecocktaildb.com/api/json/v2/9973533/filter.php?i=" + ingredient;
             return makeRequest(apiUrl)
                 .then(data => {
                     if (data.drinks && data.drinks.length !== 0) {
@@ -192,41 +201,35 @@ if (isset($_SESSION["user_name"])) {
       const data = await makeRequest(apiUrl);
       var drink = data.drinks[0];
       drink_row =
-        "<th colspan='2'><h2>" +
+        "<div class='drink_name'><h2>" +
         drink.strDrink +
-        "</h2></th><tr><td><img src='" +
+        "</h2></div><img class='drink_image' src='" +
         drink.strDrinkThumb +
         "' alt='" +
         drink.strDrink +
-        "'></td><td><h4>Ingredients:</h4>";
+        "'><div class='drink_ingredients_title'><h4>Ingredients:</h4></div><div class='drink_ingredients'>";
 
       for (var i = 1; i < 16; i++) {
-        var strMeasure = "strMeasure" + i;
+        // var strMeasure = "strMeasure" + i;
         var strIngredient = "strIngredient" + i;
-        if (drink[strIngredient] !== null && drink[strMeasure] !== null) {
-          drink_row +=
-            drink[strIngredient] + ":&ensp;" + drink[strMeasure] + "<br>";
+        if (drink[strIngredient] !== null) {
+        //   if(drink[strMeasure] !== null){
+        //     drink_row += drink[strMeasure] + "&ensp;";
+        //   }
+          drink_row += drink[strIngredient] + "<br>";
           drink_ingredients.push(drink[strIngredient]);
         }
       }
 
-      drink_row +=
-        "<br> <h4>Instructions:</h4>" + drink.strInstructions;
-      drink_row += `<br><form class='order_form' action='submit_order.php' method='post' enctype='multipart/form-data' target='_blank'><input type="hidden" name="drink_id" value='${drink.idDrink}'><label for="special_request">Special Instructions: </label><input type="text" name="special_request"><button type="submit" class='submit_order_button'>Order Drink</button></form></td></tr>`;
-    //   console.log(drink_row);
-    //   console.log(drink_ingredients);
-    //   console.log(ingredient_list);
+    //   drink_row += "</div><div class='drink_instructions_title'><h4>Instructions:</h4></div><div class='drink_instructions'>" + drink.strInstructions + "</div>";
+      drink_row += `</div><form class='order_form' action='submit_order.php' method='post' enctype='multipart/form-data' target='_blank'><input type="hidden" name="drink_id" value='${drink.idDrink}'><label for="special_request">Special Instructions:</label><input type="text" name="special_request"><br><button type="submit" class='submit_order_button'>Order Drink</button></form>`;
       var correct_ingredients = drink_ingredients.every(function (element) {
         return ingredient_list.includes(element);
       });
-    //   console.log("correct ingredients: " + correct_ingredients);
 
       if (correct_ingredients) {
-        // console.log(5);
         console.log(drink_row);
-        $("#drink_list").append(
-          "<table class='drink_table'>" + drink_row + "</table>"
-        );
+        $("#drink_list").append("<div class='drink_div'>" + drink_row + "</div>");
       }
     } catch (error) {
       console.log("Error getting drink with id " + id);

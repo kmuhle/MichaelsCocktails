@@ -7,21 +7,20 @@ function contains_profanity($text) {
   
     $result = file_get_contents($url);
   
-    return $result;
+    return ($result == 'true');
   }
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    if(contains_profanity($name)){
+    if(contains_profanity($_POST['name'])){
         echo "<script>alert('Please do not include any profanity in your name.');</script>";
-        // header('Location: not_welcome.php');
     }
     else{
         $_SESSION['user_name'] = $_POST['name'];
 
         header('Location: order.php');
         exit();
+        
     }
 }
 
@@ -35,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <form id="name_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
+        <input type="text" id="name" name="name" maxlength="15" required>
         <button type="submit">Submit</button>
     </form>
 
