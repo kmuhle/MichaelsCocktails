@@ -76,7 +76,9 @@ else{
         .order_time, .user_name{
             display: flex;
             flex-direction: column;
-            margin-right: 10vh;
+            /* margin-right: 10vh; */
+            margin-top: 1.5vh;
+            font-size: 14px;
         }
 
         .drink_name{
@@ -120,19 +122,15 @@ else{
             color: white;
         }
 
-        .order_name_time{
-            display: flex;
-            flex-direction: row;
-        }
-
         @media screen and (min-width: 1000px) {
             .order_div {
-                width: 28%; /* Set a different width on web */
+                width: 29%; /* Set a different width on web */
             }
 
-            /* .status_button_div{
+            .status_button_div{
                 flex-direction: column;
-            } */
+                width: 25%;
+            }
 
             /* .order_details{
                 flex-direction: row;
@@ -145,7 +143,7 @@ else{
     </style>
 </head>
 <body>
-    <h1>Incoming Orders:</h1>
+    <h1 style='text-align:center;'>Incoming Orders:</h1>
     <div id="main_content">
         <div id="order_list">
         </div>
@@ -170,7 +168,7 @@ else{
             console.log(orders);
 
             $.each(orders, function(i, order){
-                var order_div = `<div class='order_div'><div class='order_details'><div class='user_name'><div class='order_detail_title'>Order Name:</div>${order['user_name']}</div><div class='order_time'><div class='order_detail_title'>Order Time:</div>${format_time(order['time_ordered'])}</div></div><div class='order_drink_instructions'>`;
+                var order_div = `<div class='order_div'><div class='order_details'><div class='user_name'><div class='order_detail_title'>Order Name:</div>${order['user_name']}</div><div class='order_time'><div class='order_detail_title'>Order Time:</div>${format_time(order['time_ordered'])}</div><div class='status_button_div'><button class='accept_button' onclick='accept_status()'>Accept</button><button class='deny_button' onclick='deny_status()'>Deny</button></div></div><div class='order_drink_instructions'>`;
 
 
                 fetch("https://www.thecocktaildb.com/api/json/v2/9973533/lookup.php?i=" + order['drink_id'])
